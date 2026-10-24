@@ -1,0 +1,494 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#eef6ff">
+    <title>TrafficMind AI | Traffic Flow Dashboard</title>
+    <link rel="stylesheet" href="traffic_dashboard.css">
+</head>
+
+<body>
+    <svg aria-hidden="true" width="0" height="0" style="position:absolute;overflow:hidden">
+        <symbol id="i-grid" viewBox="0 0 24 24">
+            <rect x="3" y="3" width="7" height="7" rx="1.5" />
+            <rect x="14" y="3" width="7" height="7" rx="1.5" />
+            <rect x="3" y="14" width="7" height="7" rx="1.5" />
+            <rect x="14" y="14" width="7" height="7" rx="1.5" />
+        </symbol>
+        <symbol id="i-sliders" viewBox="0 0 24 24">
+            <path d="M4 6h9m4 0h3M4 12h3m4 0h9M4 18h11m4 0h1" />
+            <circle cx="15" cy="6" r="2" />
+            <circle cx="9" cy="12" r="2" />
+            <circle cx="17" cy="18" r="2" />
+        </symbol>
+        <symbol id="i-chart" viewBox="0 0 24 24">
+            <path d="M4 19V5m0 14h17" />
+            <path d="m7 15 4-5 3 2 5-7" />
+        </symbol>
+        <symbol id="i-info" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 11v5m0-8h.01" />
+        </symbol>
+        <symbol id="i-play" viewBox="0 0 24 24">
+            <path d="m8 5 12 7-12 7z" fill="currentColor" stroke="none" />
+        </symbol>
+        <symbol id="i-pause" viewBox="0 0 24 24">
+            <path d="M8 5h3v14H8zM15 5h3v14h-3z" fill="currentColor" stroke="none" />
+        </symbol>
+        <symbol id="i-clock" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="9" />
+            <path d="M12 7v5l3 2" />
+        </symbol>
+        <symbol id="i-car" viewBox="0 0 24 24">
+            <path d="m5 11 1.4-4h11.2l1.4 4 1.5 2v5h-2v-2H5v2H3v-5z" />
+            <path d="M7 11h10M7 14h.01M17 14h.01" />
+        </symbol>
+        <symbol id="i-arrivals" viewBox="0 0 24 24">
+            <path d="M4 19V8m5 11V5m5 14v-8m5 8V3" />
+            <path d="M2 19h20" />
+        </symbol>
+        <symbol id="i-spark" viewBox="0 0 24 24">
+            <path d="m12 3 1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8z" />
+            <path d="m19 16 .8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z" />
+        </symbol>
+        <symbol id="i-cpu" viewBox="0 0 24 24">
+            <rect x="6" y="6" width="12" height="12" rx="2" />
+            <path d="M9 2v4m6-4v4M9 18v4m6-4v4M2 9h4m-4 6h4m12-6h4m-4 6h4" />
+            <path d="M10 10h4v4h-4z" />
+        </symbol>
+        <symbol id="i-traffic" viewBox="0 0 24 24">
+            <rect x="5" y="2" width="14" height="20" rx="5" />
+            <circle cx="12" cy="7" r="2" />
+            <circle cx="12" cy="12" r="2" />
+            <circle cx="12" cy="17" r="2" />
+        </symbol>
+    </svg>
+
+    <div class="app-shell">
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-light" aria-hidden="true"><span></span><span></span><span></span></div>
+                <div>
+                    <div class="brand-name">TrafficMind AI</div>
+                    <div class="brand-tag">Adaptive traffic management</div>
+                </div>
+            </div>
+            <div>
+                <div class="nav-label">Workspace</div>
+                <nav class="nav-list" aria-label="Main navigation">
+                    <a class="nav-link active" href="#dashboard"><svg class="icon">
+                            <use href="#i-grid" />
+                        </svg>Dashboard</a>
+                    <a class="nav-link" href="#sim-settings"><svg class="icon">
+                            <use href="#i-sliders" />
+                        </svg>Simulation Settings</a>
+                    <a class="nav-link" href="#results"><svg class="icon">
+                            <use href="#i-chart" />
+                        </svg>Results &amp; Analysis</a>
+                    <a class="nav-link" href="#model-info"><svg class="icon">
+                            <use href="#i-cpu" />
+                        </svg>Model Info</a>
+                    <a class="nav-link" href="#about"><svg class="icon">
+                            <use href="#i-info" />
+                        </svg>About</a>
+                </nav>
+            </div>
+            <div class="sidebar-spacer"></div>
+            <div class="side-note" aria-label="Responsive signals. Measured outcomes.">
+                <div class="side-note-title">Responsive signals.<br>Measured outcomes.</div>
+                <div class="side-note-copy">Compare signal plans using repeatable traffic scenarios.</div>
+                <div class="side-road"><span class="side-car one"></span><span class="side-car two"></span></div>
+            </div>
+            <div class="sidebar-foot">Traffic flow prototype · v1.0</div>
+        </aside>
+
+        <main id="dashboard">
+            <header class="page-head">
+                <div>
+                    <div class="eyebrow"><span class="eyebrow-dot"></span>Adaptive traffic control · four-way junction
+                    </div>
+                    <h1>Traffic Management Dashboard</h1>
+                    <p class="subtitle">Evaluate fixed-time and adaptive signal strategies in a built-in four-way
+                        junction simulation.</p>
+                </div>
+                <div class="head-right">
+                    <span class="pill"><span class="dot"></span>Simulation</span>
+                    <span class="data-badge">Synthetic data · built-in simulator</span>
+                    <span class="round-icon" title="Simulation settings"><svg class="icon">
+                            <use href="#i-sliders" />
+                        </svg></span>
+                </div>
+            </header>
+
+            <section class="panel controls" id="sim-settings" aria-label="Simulation settings">
+                <div class="control-grid">
+                    <div class="field">
+                        <label for="scenarioSelect">Traffic scenario</label>
+                        <select id="scenarioSelect">
+                            <option value="balanced">Midday · balanced demand</option>
+                            <option value="peak">Morning peak</option>
+                            <option value="incident">East lane incident</option>
+                            <option value="rain">Rain · evening peak</option>
+                            <option value="emergency" selected>Emergency response · ambulance demo</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="strategySelect">Strategy / graph view</label>
+                        <select id="strategySelect">
+                            <option value="all" selected>Compare all 3 strategies</option>
+                            <option value="fixed">Fixed-Time</option>
+                            <option value="queue">Queue-Based Adaptive</option>
+                            <option value="ml">ML-Assisted Adaptive</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="seedInput">Random seed</label>
+                        <input id="seedInput" type="number" min="1" max="999999" value="11">
+                    </div>
+                    <div class="field">
+                        <label for="stepsInput">Simulation steps</label>
+                        <input id="stepsInput" type="number" min="60" max="720" step="30" value="240">
+                    </div>
+                    <button class="run-button" id="runButton"><svg class="icon">
+                            <use href="#i-play" />
+                        </svg><span>Run Simulation</span></button>
+                    <div class="model-status" id="model-info">
+                        <div class="model-orb"><svg class="icon">
+                                <use href="#i-cpu" />
+                            </svg></div>
+                        <div class="model-copy"><strong id="modelStatusTitle">Connecting to Random Forest</strong><span
+                                id="modelStatusDetail">Python backend · traffic_rf_model.pkl</span></div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="sim-bar" aria-label="Simulation timeline controls">
+                <div class="sim-bar-left"><span class="sim-label" id="currentStrategyLabel">Queue-Based
+                        Adaptive</span><span class="status-live" id="runStatus">Ready to simulate</span></div>
+                <div class="sim-bar-right">
+                    <label class="speed-label" for="playbackSpeed">Playback speed</label>
+                    <select class="speed-select" id="playbackSpeed" aria-label="Playback speed">
+                        <option value="300" selected>Slow · 0.30 s / step</option>
+                        <option value="180">Standard · 0.18 s / step</option>
+                        <option value="90">Fast · 0.09 s / step</option>
+                    </select>
+                    <button class="play-button" id="playButton" title="Play or pause the timeline"
+                        aria-label="Play simulation"><svg class="icon">
+                            <use href="#i-play" />
+                        </svg></button>
+                    <input class="timeline" id="timelineRange" type="range" min="0" max="239" value="0"
+                        aria-label="Simulation timeline">
+                    <span class="time-label" id="timeReadout">00:00 / 20:00</span>
+                </div>
+            </div>
+
+            <section class="kpi-grid" aria-label="Selected strategy results">
+                <article class="panel kpi">
+                    <div class="kpi-icon"><svg class="icon">
+                            <use href="#i-car" />
+                        </svg></div>
+                    <div>
+                        <div class="kpi-label">Average queue / approach</div>
+                        <div class="kpi-value" id="avgQueueValue">—</div>
+                        <div class="kpi-trend" id="avgQueueTrend">Run a simulation</div>
+                        <div class="kpi-note">Vehicles waiting per approach, averaged over time</div>
+                    </div>
+                </article>
+                <article class="panel kpi">
+                    <div class="kpi-icon violet"><svg class="icon">
+                            <use href="#i-arrivals" />
+                        </svg></div>
+                    <div>
+                        <div class="kpi-label">Final intersection queue</div>
+                        <div class="kpi-value" id="finalQueueValue">—</div>
+                        <div class="kpi-trend" id="finalQueueTrend">At the end of the run</div>
+                        <div class="kpi-note">Vehicles still waiting when the scenario ends</div>
+                    </div>
+                </article>
+                <article class="panel kpi">
+                    <div class="kpi-icon green"><svg class="icon">
+                            <use href="#i-traffic" />
+                        </svg></div>
+                    <div>
+                        <div class="kpi-label">Vehicles served</div>
+                        <div class="kpi-value" id="servedValue">—</div>
+                        <div class="kpi-trend" id="servedTrend">Completed trips through the junction</div>
+                        <div class="kpi-note">Same generated arrivals for every strategy</div>
+                    </div>
+                </article>
+                <article class="panel kpi">
+                    <div class="kpi-icon cyan"><svg class="icon">
+                            <use href="#i-clock" />
+                        </svg></div>
+                    <div>
+                        <div class="kpi-label">Total vehicle delay</div>
+                        <div class="kpi-value" id="delayValue">—</div>
+                        <div class="kpi-trend" id="delayTrend">Vehicle-hours accumulated in queues</div>
+                        <div class="kpi-note">All approaches, including the green approach</div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="top-grid">
+                <article class="panel junction-card">
+                    <div class="card-head">
+                        <div class="card-title"><svg class="icon">
+                                <use href="#i-traffic" />
+                            </svg>Junction State</div>
+                        <span class="live-tag" id="junctionTag">Queue-Based Adaptive · current state</span>
+                    </div>
+                    <div class="emergency-banner" id="emergencyBanner" role="status" aria-live="polite" hidden>
+                        <span class="emergency-banner-icon" aria-hidden="true">🚨</span>
+                        <span class="emergency-banner-copy"><strong id="emergencyBannerTitle">EMERGENCY VEHICLE
+                                DETECTED</strong><span id="emergencyBannerText"></span></span>
+                        <span class="emergency-banner-state" id="emergencyBannerState">PRIORITY</span>
+                    </div>
+                    <div class="junction-layout">
+                        <div class="map-wrap">
+                            <svg id="junctionSvg" viewBox="0 0 600 340" role="img"
+                                aria-label="Animated four-way traffic intersection">
+                                <rect width="600" height="340" fill="#eaf6e9" />
+                                <path d="M0 0h198v91H0zM402 0h198v91H402zM0 249h198v91H0zM402 249h198v91H402z"
+                                    fill="#e0f1dc" />
+                                <g fill="#b2d9a5" opacity=".9">
+                                    <circle cx="43" cy="34" r="14" />
+                                    <circle cx="82" cy="62" r="10" />
+                                    <circle cx="151" cy="34" r="12" />
+                                    <circle cx="444" cy="41" r="13" />
+                                    <circle cx="521" cy="64" r="11" />
+                                    <circle cx="571" cy="34" r="15" />
+                                    <circle cx="44" cy="290" r="14" />
+                                    <circle cx="104" cy="313" r="10" />
+                                    <circle cx="161" cy="278" r="13" />
+                                    <circle cx="455" cy="300" r="13" />
+                                    <circle cx="520" cy="278" r="11" />
+                                    <circle cx="570" cy="313" r="15" />
+                                </g>
+                                <g fill="#7fbd78">
+                                    <circle cx="43" cy="34" r="8" />
+                                    <circle cx="82" cy="62" r="6" />
+                                    <circle cx="151" cy="34" r="7" />
+                                    <circle cx="444" cy="41" r="8" />
+                                    <circle cx="521" cy="64" r="6" />
+                                    <circle cx="571" cy="34" r="9" />
+                                    <circle cx="44" cy="290" r="8" />
+                                    <circle cx="104" cy="313" r="6" />
+                                    <circle cx="161" cy="278" r="7" />
+                                    <circle cx="455" cy="300" r="8" />
+                                    <circle cx="520" cy="278" r="6" />
+                                    <circle cx="570" cy="313" r="9" />
+                                </g>
+                                <rect x="0" y="91" width="600" height="158" fill="#596d81" />
+                                <rect x="198" y="0" width="204" height="340" fill="#596d81" />
+                                <rect x="198" y="91" width="204" height="158" fill="#53677b" />
+                                <g stroke="#dce5ec" stroke-width="3" stroke-dasharray="14 13" opacity=".75">
+                                    <path d="M0 169h198M402 169h198M295 0v91M295 249v91" />
+                                </g>
+                                <g fill="#f4f7fa" opacity=".95">
+                                    <path
+                                        d="M210 78h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11z" />
+                                    <path
+                                        d="M210 232h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11zm16 0h11v30h-11z" />
+                                    <path
+                                        d="M183 102h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30z" />
+                                    <path
+                                        d="M387 102h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30zm0 14h30v9h-30z" />
+                                </g>
+                                <g fill="#cad7e1" opacity=".72">
+                                    <path
+                                        d="m277 123 13 0-7-10zm46 94-13 0 7 10zm-97-58 0 13-10-7zm148 23 0-13 10 7z" />
+                                </g>
+                                <g id="carsLayer"></g>
+                                <g id="signalsLayer">
+                                    <circle id="sigNorth" cx="295" cy="116" r="10" fill="#f05458" stroke="#fff"
+                                        stroke-width="3" />
+                                    <circle id="sigEast" cx="380" cy="169" r="10" fill="#f05458" stroke="#fff"
+                                        stroke-width="3" />
+                                    <circle id="sigSouth" cx="305" cy="225" r="10" fill="#f05458" stroke="#fff"
+                                        stroke-width="3" />
+                                    <circle id="sigWest" cx="220" cy="181" r="10" fill="#f05458" stroke="#fff"
+                                        stroke-width="3" />
+                                </g>
+                                <g font-family="system-ui, sans-serif" font-size="9" font-weight="700" fill="#eaf4ff"
+                                    opacity=".9">
+                                    <text x="260" y="103">NORTH</text><text x="418" y="173">EAST</text><text x="312"
+                                        y="242">SOUTH</text><text x="135" y="173">WEST</text>
+                                </g>
+                            </svg>
+                            <div class="map-queue north">North · <b id="mapNorth">0</b></div>
+                            <div class="map-queue east">East · <b id="mapEast">0</b></div>
+                            <div class="map-queue south">South · <b id="mapSouth">0</b></div>
+                            <div class="map-queue west">West · <b id="mapWest">0</b></div>
+                            <div class="emergency-vehicles-layer" id="emergencyVehiclesLayer" aria-live="polite"></div>
+                        </div>
+                        <div class="signal-list-wrap">
+                            <div class="signal-heading"><span>Signal status</span><span id="phaseStatus">—</span></div>
+                            <div class="signal-row" data-dir="North"><span
+                                    class="signal-dot red"></span><span>North</span><span
+                                    class="signal-state red">Red</span><span class="signal-timer">—</span></div>
+                            <div class="signal-row" data-dir="East"><span
+                                    class="signal-dot red"></span><span>East</span><span
+                                    class="signal-state red">Red</span><span class="signal-timer">—</span></div>
+                            <div class="signal-row" data-dir="South"><span
+                                    class="signal-dot red"></span><span>South</span><span
+                                    class="signal-state red">Red</span><span class="signal-timer">—</span></div>
+                            <div class="signal-row" data-dir="West"><span
+                                    class="signal-dot red"></span><span>West</span><span
+                                    class="signal-state red">Red</span><span class="signal-timer">—</span></div>
+                            <div class="reason-box"><svg class="icon">
+                                    <use href="#i-spark" />
+                                </svg><span id="decisionReason">Run the simulation to see why a signal plan was
+                                    selected.</span></div>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="panel chart-card">
+                    <div class="card-head">
+                        <div class="card-title"><svg class="icon">
+                                <use href="#i-chart" />
+                            </svg>Total Queue Over Time</div><span class="card-subtitle">Builds with simulation
+                            playback</span>
+                    </div>
+                    <div class="chart-content"><canvas class="chart-canvas" id="queueChart"
+                            aria-label="Line chart comparing total queue through the simulation"></canvas>
+                        <div class="chart-foot"><span>Simulation time (minutes)</span><span
+                                id="chartCurrentTime">Playhead at 0:00</span></div>
+                        <div class="legend"><span class="legend-item" data-chart-strategy="fixed"><i
+                                    class="legend-swatch fixed"></i>Fixed-Time</span><span class="legend-item"
+                                data-chart-strategy="queue"><i class="legend-swatch queue"></i>Queue-Based</span><span
+                                class="legend-item" data-chart-strategy="ml"><i
+                                    class="legend-swatch ml"></i>ML-Assisted</span></div>
+                    </div>
+                </article>
+
+                <article class="panel chart-card">
+                    <div class="card-head">
+                        <div class="card-title"><svg class="icon">
+                                <use href="#i-arrivals" />
+                            </svg>Average Queue by Direction</div><span class="card-subtitle">Average through current
+                            step</span>
+                    </div>
+                    <div class="chart-content"><canvas class="chart-canvas" id="directionChart"
+                            aria-label="Grouped bar chart comparing average queue by direction"></canvas>
+                        <div class="chart-foot"><span>Direction</span><span>Same arrivals · growing over time</span>
+                        </div>
+                        <div class="legend"><span class="legend-item" data-chart-strategy="fixed"><i
+                                    class="legend-swatch fixed"></i>Fixed-Time</span><span class="legend-item"
+                                data-chart-strategy="queue"><i class="legend-swatch queue"></i>Queue-Based</span><span
+                                class="legend-item" data-chart-strategy="ml"><i
+                                    class="legend-swatch ml"></i>ML-Assisted</span></div>
+                    </div>
+                </article>
+            </section>
+
+            <section class="panel result-summary" aria-live="polite">
+                <div class="summary-icon"><svg class="icon">
+                        <use href="#i-chart" />
+                    </svg></div>
+                <div class="summary-copy">
+                    <span class="summary-eyebrow">Scenario outcome · full simulation run</span>
+                    <h2 id="bestStrategyLabel">Results will appear after the simulation</h2>
+                    <p id="outcomeSummary">Run the simulation to compare queue and delay results with the fixed-time
+                        baseline.</p>
+                </div>
+                <div class="summary-metric">
+                    <span>Average queue vs. baseline</span>
+                    <strong id="improvementValue">—</strong>
+                </div>
+            </section>
+
+            <section class="bottom-grid" id="results">
+                <article class="panel">
+                    <div class="card-head">
+                        <div class="card-title"><svg class="icon">
+                                <use href="#i-chart" />
+                            </svg>Strategy Comparison</div><span class="card-subtitle" id="comparisonScenario">—</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Strategy</th>
+                                    <th>Avg. queue (veh/approach) ↓</th>
+                                    <th>Final queue (veh) ↓</th>
+                                    <th>Vehicles served ↑</th>
+                                    <th>Delay (veh·h) ↓</th>
+                                    <th>Ambulances cleared ↑</th>
+                                    <th>Avg. EMS delay (s) ↓</th>
+                                    <th>Avg. queue vs. fixed</th>
+                                </tr>
+                            </thead>
+                            <tbody id="comparisonBody">
+                                <tr>
+                                    <td colspan="8">Run a simulation to compare strategies.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="comparison-note">Every routine scenario schedules two simulated ambulances from
+                        different roads; Emergency Response schedules four. Each ambulance is shown on its incoming road
+                        with a FROM label. All strategies give its road the next safe green, then continue their signal
+                        plan. EMS delay is averaged across the scheduled arrivals.</div>
+                </article>
+                <article class="panel">
+                    <div class="card-head">
+                        <div class="card-title"><svg class="icon">
+                                <use href="#i-arrivals" />
+                            </svg>Average Queue by Approach</div><span class="card-subtitle">Vehicles waiting</span>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Approach</th>
+                                    <th>Fixed-Time</th>
+                                    <th>Queue-Based</th>
+                                    <th>ML-Assisted</th>
+                                </tr>
+                            </thead>
+                            <tbody id="directionBody">
+                                <tr>
+                                    <td colspan="4">Results will appear after the simulation.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </section>
+
+            <section class="info-panel">
+                <article class="panel info-card" id="about">
+                    <h3><svg class="icon">
+                            <use href="#i-info" />
+                        </svg>About this simulation</h3>
+                    <p>A built-in, repeatable four-way intersection model with vehicle arrivals, queue lengths, approach
+                        wait, signal phases, lane capacity, and a fixed-time baseline. It runs without SUMO. Routine
+                        scenarios include two simulated ambulances, while Emergency Response includes four from
+                        different approaches; the road is labeled on the map and receives the next safe green. Choose
+                        peak, incident, rain, or emergency conditions and change the seed for repeatable runs.</p>
+                </article>
+                <article class="panel info-card">
+                    <h3><svg class="icon">
+                            <use href="#i-cpu" />
+                        </svg>Model details</h3>
+                    <p><strong>ML-assisted mode uses the Random Forest loaded from traffic_rf_model.pkl by the local
+                            Python backend.</strong> Its training target imitates a hand-built synthetic heuristic;
+                        speed and occupancy are estimated from queue length. Results do not represent live road
+                        conditions.</p>
+                </article>
+            </section>
+            <footer class="footnote"><span class="footnote-left"><svg class="icon">
+                        <use href="#i-info" />
+                    </svg>Results are generated from synthetic traffic and are for demonstration only.</span><span
+                    id="runMeta">Seed 11 · 240 steps · 20 minutes</span></footer>
+        </main>
+    </div>
+    <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+    <script src="traffic_dashboard.js"></script>
+</body>
+
+</html>
