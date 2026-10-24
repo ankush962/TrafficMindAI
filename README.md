@@ -44,25 +44,25 @@ TrafficMindAI is a browser-based traffic-intersection simulation that compares c
 
 ```text
 ┌──────────────────────────────┐
-│  Browser Dashboard            │
-│  HTML · CSS · JavaScript      │
+│  Browser Dashboard           │
+│  HTML · CSS · JavaScript     │
 └──────────────┬───────────────┘
                │ Simulated traffic state
                ▼
-┌──────────────────────────────┐
+┌──────────────────────────────-┐
 │  Traffic Simulation           │
-│  Fixed-Time / Queue-Based / ML │
-└──────────────┬───────────────┘
+│  Fixed-Time / Queue-Based / ML│
+└──────────────┬───────────────-┘
                │ ML prediction requests
                ▼
 ┌──────────────────────────────┐
-│  Python API                   │
-│  Random Forest · joblib       │
+│  Python API                  │
+│  Random Forest · joblib      │
 └──────────────────────────────┘
 
 ┌──────────────────────────────┐
-│  traffic_sim.py               │
-│  Synthetic benchmark + chart  │
+│  traffic_sim.py              │
+│  Synthetic benchmark + chart │
 └──────────────────────────────┘
 ```
 
